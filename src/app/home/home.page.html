@@ -1,20 +1,33 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="true" style="margin-top: 30px;">
   <ion-toolbar>
     <ion-title>
-      Blank
+      ionic demo app
     </ion-title>
   </ion-toolbar>
 </ion-header>
+<div style="height: 50px;"></div>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="ion-padding">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
+      <ion-title size="large">ionicFramework</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
-</ion-content>
+  <ion-content>
+    <div class="center-content">
+      <strong>Ionic Demo App</strong>
+
+      <button class="custom-button" (click)="onClickShowInterstitialAd()">
+        Show Interstitial Ad
+      </button>
+
+      <button class="custom-button" (click)="onClickShowFixedBannerAd()">
+        Show Fixed Banner Ad
+      </button>
+
+      <button class="custom-button" (click)="onClickShowAdaptiveBannerAd()">
+        Show Adaptive Banner Ad
+      </button>
+    </div>
+  </ion-content>
