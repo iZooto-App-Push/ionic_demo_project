@@ -18,11 +18,11 @@ export class HomePage {
   adaptiveBannerId = '/21775744923/example/adaptive-banner';
   fixedBannerId = '/21775744923/example/fixed-size-banner';
 
-  /* Uncomment this section for production ad units
-  private interstitialId = '/21775744923/example/interstitial';
-  adaptiveBannerId = '/21775744923/example/adaptive-banner';
-  fixedBannerId = '/21775744923/example/fixed-size-banner';
-  */
+  //Uncomment this section for production ad units
+  //private interstitialId = '/206696744,22505733620/SpaceLaunch/com.kickstandtech.spacelaunchschedule_interstitial';
+  //adaptiveBannerId = '/206696744,22505733620/SpaceLaunch/com.kickstandtech.spacelaunchschedule_banner';
+  //fixedBannerId = '/206696744,22505733620/SpaceLaunch/com.kickstandtech.spacelaunchschedule_banner';
+  
 
   // Flags to track which banner is visible
   adaptiveBannerVisible = false;
