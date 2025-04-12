@@ -10,4 +10,12 @@ export const routes: Routes = [
     redirectTo: 'home',
     pathMatch: 'full',
   },
+  {
+    path: 'second-screen',
+    loadComponent: () => import('./second-screen/second-screen.page').then( m => m.SecondScreenPage)
+  },
+  {
+    path: 'second-screen',
+    loadComponent: () => import('./second-screen/second-screen.page').then( m => m.SecondScreenPage)
+  },
 ];
