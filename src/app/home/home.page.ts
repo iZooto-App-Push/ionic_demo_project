@@ -14,22 +14,23 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 // Main activity class component
 export class HomePage {
-  // Use the following ad units for test ads (GAM format: /networkId/adUnitPath)
-  private interstitialId = '/21775744923/example/interstitial';
-  adaptiveBannerId = '/21775744923/example/adaptive-banner';
-  fixedBannerId = '/21775744923/example/fixed-size-banner';
+  // Use the following ad units for test ads (GAM format: /networkId/adUnitPath) and isTesting property should be false
+  private interstitialIdGAM = '/21775744923/example/interstitial';
+  private adaptiveBannerIdGAM = '/21775744923/example/adaptive-banner';
+  private fixedBannerIdGAM = '/21775744923/example/fixed-size-banner';
+
+  // Use the following ad units for test ads (ADMOB format: /networkId/adUnitPath) and isTesting = optional (true/false)
+  private interstitialIdAdMOB = 'ca-app-pub-3940256099942544/1033173712';
+  private adaptiveBannerIdAdMOB = 'ca-app-pub-3940256099942544/9214589741';
+  private fixedBannerIdAdMOB = 'ca-app-pub-3940256099942544/6300978111';
 
 
-  //Uncomment this section for production ad units
+  //Uncomment this section for production ad units and isTesting property should be false
   //private interstitialId = '/206696744,22505733620/SpaceLaunch/com.kickstandtech.spacelaunchschedule_interstitial';
-  //adaptiveBannerId = '/206696744,22505733620/SpaceLaunch/com.kickstandtech.spacelaunchschedule_banner';
-  //fixedBannerId = '/206696744,22505733620/SpaceLaunch/com.kickstandtech.spacelaunchschedule_banner';
+  //private adaptiveBannerId = '/206696744,22505733620/SpaceLaunch/com.kickstandtech.spacelaunchschedule_banner';
+  //private fixedBannerId = '/206696744,22505733620/SpaceLaunch/com.kickstandtech.spacelaunchschedule_banner';
 
-
-  // Flags to track which banner is visible
-  adaptiveBannerVisible = false;
-  fixedBannerVisible = false;
-
+  // Injecting Angular Router to enable navigation between pages/screens
   constructor(private router: Router) { }
 
   // Angular initialization lifecycle hook
@@ -40,62 +41,18 @@ export class HomePage {
   // Ionic lifecycle hook: Called when the view fully enters and is active
   async ionViewDidEnter() {
     // Automatically show banners when view is active (optional)
-    // await this.toShowBannerAd(true);  // Show fixed banner
-    // await this.toShowBannerAd(false); // Show adaptive banner
-    console.log('HomePage has been refreshed or re-entered');
-  }
-
-  /**
-   * Unified function to show either fixed or adaptive banner based on boolean
-   * @param fixed - true for fixed banner, false for adaptive
-   */
-  async toShowBannerAd(fixed: boolean) {
-    if (fixed == true) {
-      await this.showFixedBannerAd();
-    } else {
-      await this.showAdaptiveBannerMobAd();
-    }
-  }
-
-  // Show fixed banner ad
-  async showFixedBannerAd() {
-    try {
-      await AdMob.showBanner({
-        adId: this.fixedBannerId, // GAM ad unit ID for fixed banner
-        adSize: BannerAdSize.BANNER, // Standard fixed banner size
-        position: BannerAdPosition.BOTTOM_CENTER, // Show at bottom
-        margin: 50, // Optional margin from edge
-        isTesting: false, // Set true for test ads, false for production
-      });
-      this.adaptiveBannerVisible = false;
-      this.fixedBannerVisible = true;
-      console.log('Fixed Banner Ad Shown at Bottom');
-    } catch (error) {
-      console.error('Failed to load fixed banner:', error);
-    }
-  }
-
-  // Show adaptive banner ad
-  async showAdaptiveBannerMobAd() {
-    try {
-      await AdMob.showBanner({
-        adId: this.adaptiveBannerId, // GAM ad unit ID for adaptive banner
-        adSize: BannerAdSize.ADAPTIVE_BANNER, // Use adaptive size
-        position: BannerAdPosition.TOP_CENTER, // Show at top
-        margin: 120, // Optional margin from top
-        isTesting: false, // Set true for test ads, false for production
-      });
-      this.adaptiveBannerVisible = true;
-      console.log('Adaptive Banner Ad Shown at Top');
-
-    } catch (error) {
-      console.error('Failed to load banner:', error);
-    }
+    console.log('HomePage is defined');
   }
 
   // Click handler to manually show fixed banner
   async onClickShowFixedBannerAd() {
-    await this.showFixedBannerAd(); // Show GAM fixed banner
+    await this.ToShowBannerAd(true);
+  }
+
+  // Click handler to show adaptive banner
+  async onClickShowAdaptiveBannerAd() {
+    await this.ToShowBannerAd(false); // Show GAM adaptive banner
+    // this.router.navigate(['/second-screen']); // for new screen 
   }
 
   // Click handler to show interstitial ad
@@ -103,30 +60,29 @@ export class HomePage {
     await this.prepareInterstitialAd(); // Load and show interstitial
   }
 
-  // Click handler to show adaptive banner
-  async onClickShowAdaptiveBannerAd() {
-    await this.showAdaptiveBannerMobAd(); // Show GAM adaptive banner
-    //this.router.navigate(['/second-screen']); // for new screen 
+  // Show banner ad (fixed or adaptive based on parameter)
+  async ToShowBannerAd(isFixed: boolean) {
+    try {
+      await AdMob.showBanner({
+        adId: isFixed ? this.fixedBannerIdGAM : this.adaptiveBannerIdGAM,
+        adSize: isFixed ? BannerAdSize.BANNER : BannerAdSize.MEDIUM_RECTANGLE,
+        position: isFixed ? BannerAdPosition.BOTTOM_CENTER : BannerAdPosition.TOP_CENTER,
+        margin: isFixed ? 50 : 120,
+        isTesting: false, // Set true for test ads, (false for production and GAM test)
+      });
+
+      console.log(`${isFixed ? 'Fixed' : 'Adaptive'} Banner Ad Shown`);
+
+    } catch (error) {
+      console.error(`Failed to load ${isFixed ? 'fixed' : 'adaptive'} banner:`, error);
+    }
   }
 
   // Click handler to show adaptive banner
   async onClickBannerHide() {
     try {
       // Only hide the banner if it's currently visible
-      if (this.fixedBannerVisible) {
-        await AdMob.hideBanner(); // Hide fixed banner if visible
-        this.fixedBannerVisible = false;
-        console.log("Fixed Banner hidden");
-      } else if (this.adaptiveBannerVisible) {
-        await AdMob.hideBanner(); // Hide adaptive banner if visible
-        this.adaptiveBannerVisible = false;
-        console.log("Adaptive Banner hidden");
-      }
-
-      // this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate(['/home']); // or whatever your current route is
-      //  });
-
+      await AdMob.removeBanner();
     } catch (error) {
       console.error("Error hiding banner:", error);
     }
@@ -151,7 +107,7 @@ export class HomePage {
 
       // Load the interstitial ad
       await AdMob.prepareInterstitial({
-        adId: this.interstitialId, // GAM interstitial ad unit
+        adId: this.interstitialIdGAM, // GAM interstitial ad unit
         isTesting: false, // Set true for test ads, false for production
       });
 

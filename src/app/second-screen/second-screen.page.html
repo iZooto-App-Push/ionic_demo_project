@@ -3,15 +3,16 @@
     <ion-title>SecondScreen</ion-title>
   </ion-toolbar>
 </ion-header>
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let item of items; let i = index">
+      <ng-container *ngIf="item.type === 'ad'">
+        <div id="banner-ad-slot-{{ i }}"></div>
+      </ng-container>
+      <ng-container *ngIf="!item.type">
+        {{ item.name }}
+      </ng-container>
+    </ion-item>
+  </ion-list>
 
-<!-- <ion-content>
-  <div class="center-content">
-    <button ion-button expand="full" (click)="clickShowAdaptiveBannerAd()">
-      Show Second Screen Banner
-    </button>
-
-    <button ion-button expand="full" (click)="clickBannerHide()">
-      Hide Banner
-    </button>
-  </div>
-</ion-content> -->
+</ion-content>
