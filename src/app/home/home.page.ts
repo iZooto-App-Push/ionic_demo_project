@@ -60,9 +60,15 @@ export class HomePage {
     await this.prepareInterstitialAd(); // Load and show interstitial
   }
 
+  // Click handler to remove banner ad
+  async onClickBannerRemove(){
+    await this.removeBanner();
+  }
+
   // Show banner ad (fixed or adaptive based on parameter)
   async ToShowBannerAd(isFixed: boolean) {
     try {
+      await this.removeBanner();
       await AdMob.showBanner({
         adId: isFixed ? this.fixedBannerIdGAM : this.adaptiveBannerIdGAM,
         adSize: isFixed ? BannerAdSize.BANNER : BannerAdSize.MEDIUM_RECTANGLE,
@@ -78,12 +84,14 @@ export class HomePage {
     }
   }
 
-  // Click handler to show adaptive banner
-  async onClickBannerHide() {
+
+  // Function to remove the currently displayed banner ad
+  async removeBanner() {
     try {
-      // Only hide the banner if it's currently visible
+      // Attempt to remove the banner ad from the screen
       await AdMob.removeBanner();
     } catch (error) {
+      // Log any error encountered while removing the banner
       console.error("Error hiding banner:", error);
     }
   }
