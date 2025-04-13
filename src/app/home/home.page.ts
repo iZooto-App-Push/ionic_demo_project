@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from '@ionic/angular/standalone';
 import { AdMob, BannerAdOptions, BannerAdSize, BannerAdPosition, InterstitialAdPluginEvents, BannerAdPluginEvents } from '@capacitor-community/admob';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
 //Defining Angular component for Ionic
 @Component({
   selector: 'app-home',
@@ -23,7 +24,6 @@ export class HomePage {
   private interstitialIdAdMOB = 'ca-app-pub-3940256099942544/1033173712';
   private adaptiveBannerIdAdMOB = 'ca-app-pub-3940256099942544/9214589741';
   private fixedBannerIdAdMOB = 'ca-app-pub-3940256099942544/6300978111';
-
 
   //Uncomment this section for production ad units and isTesting property should be false
   //private interstitialId = '/206696744,22505733620/SpaceLaunch/com.kickstandtech.spacelaunchschedule_interstitial';
