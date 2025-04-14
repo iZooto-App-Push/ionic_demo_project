@@ -17,7 +17,7 @@ import { Platform } from '@ionic/angular';
 
 // Main activity class component
 export class HomePage {
-  private loading: HTMLIonLoadingElement | null = null;
+  
   // Use the following ad units for test ads (GAM format: /networkId/adUnitPath) and isTesting property should be false
   private interstitialIdGAM = '/21775744923/example/interstitial';
   private adaptiveBannerIdGAM = '/21775744923/example/adaptive-banner';
