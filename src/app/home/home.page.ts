@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from '@ionic/angular/standalone';
-import { AdMob, BannerAdOptions, BannerAdSize, BannerAdPosition, InterstitialAdPluginEvents, BannerAdPluginEvents } from '@capacitor-community/admob';
+import { AdMob, BannerAdOptions, BannerAdSize, BannerAdPosition, InterstitialAdPluginEvents, BannerAdPluginEvents, RewardAdPluginEvents } from '@capacitor-community/admob';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Platform } from '@ionic/angular';
 
@@ -17,16 +17,20 @@ import { Platform } from '@ionic/angular';
 
 // Main activity class component
 export class HomePage {
-  
+
   // Use the following ad units for test ads (GAM format: /networkId/adUnitPath) and isTesting property should be false
   private interstitialIdGAM = '/21775744923/example/interstitial';
   private adaptiveBannerIdGAM = '/21775744923/example/adaptive-banner';
   private fixedBannerIdGAM = '/21775744923/example/fixed-size-banner';
+  private rewardedIdGAM = '/21775744923/example/rewarded';
+
+
 
   // Use the following ad units for test ads (ADMOB format: /networkId/adUnitPath) and isTesting = optional (true/false)
   private interstitialIdAdMOB = 'ca-app-pub-3940256099942544/1033173712';
   private adaptiveBannerIdAdMOB = 'ca-app-pub-3940256099942544/9214589741';
   private fixedBannerIdAdMOB = 'ca-app-pub-3940256099942544/6300978111';
+  private rewardedIdAdMOB = 'ca-app-pub-3940256099942544/5224354917';
 
   //Uncomment this section for production ad units and isTesting property should be false
   //private interstitialId = '/206696744,22505733620/SpaceLaunch/com.kickstandtech.spacelaunchschedule_interstitial';
@@ -63,6 +67,19 @@ export class HomePage {
   // Click handler to show interstitial ad
   async onClickShowInterstitialAd() {
     await this.prepareInterstitialAd(); // Load and show interstitial
+  }
+
+  // Click handler to show rewarded ad
+  async onClickRewardedAd() {
+    await this.prepareRewardedAd(); // Load and show interstitial
+  }
+
+  // Click handler to show app open ad
+  async onClickAppOpenAd() {
+  }
+
+  // Click handler to show native ad
+  async onClickNativeAd() {
   }
 
   // Click handler to remove banner ad
@@ -138,6 +155,45 @@ export class HomePage {
       console.error('Error showing interstitial:', error);
     }
   }
+
+  async prepareRewardedAd() {
+    try {
+      // Listener: Called when the rewarded video ad has successfully loaded
+      AdMob.addListener(RewardAdPluginEvents.Loaded, () => {
+        console.log('Rewarded ad loaded');
+        this.showRewardedAd();
+      });
+
+      AdMob.addListener(RewardAdPluginEvents.Rewarded, (reward: any) => {
+        console.log('User earned reward:', reward);
+      });
+
+      AdMob.addListener(RewardAdPluginEvents.FailedToLoad, (error) => {
+        console.error('Rewarded ad failed to load:', error);
+      });
+
+      // Prepare the rewarded ad (this starts loading the ad in background)
+      await AdMob.prepareRewardVideoAd({
+        adId: this.rewardedIdGAM, // Replace with your test or production rewarded ad unit
+        isTesting: false,        // false for real ads
+      });
+
+    } catch (error) {
+      // Catch and log any unexpected errors
+      console.error('Error preparing rewarded video ad:', error);
+    }
+  }
+
+  // Show rewarded ad after it's been prepared
+  async showRewardedAd() {
+    try {
+      await AdMob.showRewardVideoAd();
+      console.log('rewarded Shown');
+    } catch (error) {
+      console.error('Error showing rewarded:', error);
+    }
+  }
+
 
   // For exit app
   initializeApp() {
