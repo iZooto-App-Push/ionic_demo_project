@@ -1,9 +1,15 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from '@ionic/angular/standalone';
-import { AdMob, BannerAdOptions, BannerAdSize, BannerAdPosition, InterstitialAdPluginEvents, BannerAdPluginEvents, RewardAdPluginEvents } from '@capacitor-community/admob';
+import {
+  AdMob, BannerAdOptions,
+  BannerAdSize, BannerAdPosition,
+  InterstitialAdPluginEvents,
+  BannerAdPluginEvents, RewardAdPluginEvents, AdOptions
+} from '@capacitor-community/admob';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Platform } from '@ionic/angular';
+import { App } from '@capacitor/app';
 
 
 //Defining Angular component for Ionic
@@ -23,7 +29,7 @@ export class HomePage {
   private adaptiveBannerIdGAM = '/21775744923/example/adaptive-banner';
   private fixedBannerIdGAM = '/21775744923/example/fixed-size-banner';
   private rewardedIdGAM = '/21775744923/example/rewarded';
-
+  private appOpenIdGAM = '/21775744923/example/app-open';
 
 
   // Use the following ad units for test ads (ADMOB format: /networkId/adUnitPath) and isTesting = optional (true/false)
@@ -31,6 +37,8 @@ export class HomePage {
   private adaptiveBannerIdAdMOB = 'ca-app-pub-3940256099942544/9214589741';
   private fixedBannerIdAdMOB = 'ca-app-pub-3940256099942544/6300978111';
   private rewardedIdAdMOB = 'ca-app-pub-3940256099942544/5224354917';
+  private appOpenIdAdMOB = 'ca-app-pub-3940256099942544/9257395921';
+
 
   //Uncomment this section for production ad units and isTesting property should be false
   //private interstitialId = '/206696744,22505733620/SpaceLaunch/com.kickstandtech.spacelaunchschedule_interstitial';
@@ -60,8 +68,7 @@ export class HomePage {
 
   // Click handler to show adaptive banner
   async onClickShowAdaptiveBannerAd() {
-    await this.ToShowBannerAd(false); // Show GAM adaptive banner
-    // this.router.navigate(['/second-screen']); // for new screen 
+    await this.ToShowBannerAd(false);
   }
 
   // Click handler to show interstitial ad
@@ -76,10 +83,7 @@ export class HomePage {
 
   // Click handler to show app open ad
   async onClickAppOpenAd() {
-  }
-
-  // Click handler to show native ad
-  async onClickNativeAd() {
+    this.showAppOpen();
   }
 
   // Click handler to remove banner ad
@@ -95,7 +99,7 @@ export class HomePage {
         adId: isFixed ? this.fixedBannerIdGAM : this.adaptiveBannerIdGAM,
         adSize: isFixed ? BannerAdSize.BANNER : BannerAdSize.MEDIUM_RECTANGLE,
         position: isFixed ? BannerAdPosition.BOTTOM_CENTER : BannerAdPosition.TOP_CENTER,
-        margin: isFixed ? 50 : 120,
+        margin: isFixed ? 50 : 110,
         isTesting: false, // Set true for test ads, (false for production and GAM test)
       });
 
@@ -155,7 +159,7 @@ export class HomePage {
       console.error('Error showing interstitial:', error);
     }
   }
-
+  // Prepare rewarded ad (preloading before showing)
   async prepareRewardedAd() {
     try {
       // Listener: Called when the rewarded video ad has successfully loaded
@@ -179,7 +183,6 @@ export class HomePage {
       });
 
     } catch (error) {
-      // Catch and log any unexpected errors
       console.error('Error preparing rewarded video ad:', error);
     }
   }
@@ -193,11 +196,25 @@ export class HomePage {
       console.error('Error showing rewarded:', error);
     }
   }
+  // To show app open function
+  async showAppOpen() {
+    try {
+      await AdMob.prepareInterstitial({
+        adId: this.appOpenIdGAM,
+        isTesting: false // Set to false in production
+      });
 
+      await AdMob.showInterstitial();
+    } catch (error) {
+      console.error('Failed to show App Open (Interstitial):', error);
+    }
+  }
 
-  // For exit app
+  // For initialize App and exit app
   initializeApp() {
     this.platform.ready().then(() => {
+      // Show App Open Ad on start
+      this.showAppOpen();
       this.platform.backButton.subscribeWithPriority(10, () => {
         (window.navigator as any).app.exitApp(); // Close the app immediately
       });
