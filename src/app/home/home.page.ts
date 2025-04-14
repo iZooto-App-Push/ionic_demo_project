@@ -8,7 +8,7 @@ import {
   BannerAdPluginEvents, RewardAdPluginEvents, AdOptions
 } from '@capacitor-community/admob';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { Platform } from '@ionic/angular';
+import { Platform, LoadingController } from '@ionic/angular';
 import { App } from '@capacitor/app';
 
 
@@ -46,7 +46,7 @@ export class HomePage {
   //private fixedBannerId = '/206696744,22505733620/SpaceLaunch/com.kickstandtech.spacelaunchschedule_banner';
 
   // Injecting Angular Router to enable navigation between pages/screens
-  constructor(private platform: Platform, private router: Router) {
+  constructor(private loadingController: LoadingController, private platform: Platform, private router: Router) {
     this.initializeApp();
   }
 
@@ -59,6 +59,23 @@ export class HomePage {
   async ionViewDidEnter() {
     // Automatically show banners when view is active (optional)
     console.log('HomePage is defined');
+    this.presentLoading();
+  }
+
+
+  async presentLoading() {
+    const loading = await this.loadingController.create({
+      message: 'Loading...',
+      duration: 2000,
+    });
+    await loading.present();
+    console.log("loading presented");
+    const { role, data } = await loading.onDidDismiss();
+    console.log('Loading dismissed!');
+
+    // You can also access the loading instance:
+    // const { role, data } = await loading.onDidDismiss();
+    // console.log('Loading dismissed!');
   }
 
   // Click handler to manually show fixed banner
