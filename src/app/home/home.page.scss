@@ -48,7 +48,20 @@
   max-width: 300px;
 }
 
+.custom-button-remove {
+  background-color: #7f1a0f;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 80%; /* adjust based on design */
+  max-width: 300px;
+}
+
 
 .custom-button:hover {
   background-color: #0056b3;
 }
+

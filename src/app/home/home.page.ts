@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from '@ionic/angular/standalone';
 import { AdMob, BannerAdOptions, BannerAdSize, BannerAdPosition, InterstitialAdPluginEvents, BannerAdPluginEvents } from '@capacitor-community/admob';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Platform } from '@ionic/angular';
+
 
 //Defining Angular component for Ionic
 @Component({
@@ -15,6 +17,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 // Main activity class component
 export class HomePage {
+  private loading: HTMLIonLoadingElement | null = null;
   // Use the following ad units for test ads (GAM format: /networkId/adUnitPath) and isTesting property should be false
   private interstitialIdGAM = '/21775744923/example/interstitial';
   private adaptiveBannerIdGAM = '/21775744923/example/adaptive-banner';
@@ -31,7 +34,9 @@ export class HomePage {
   //private fixedBannerId = '/206696744,22505733620/SpaceLaunch/com.kickstandtech.spacelaunchschedule_banner';
 
   // Injecting Angular Router to enable navigation between pages/screens
-  constructor(private router: Router) { }
+  constructor(private platform: Platform, private router: Router) {
+    this.initializeApp();
+  }
 
   // Angular initialization lifecycle hook
   async ngOnInit() {
@@ -61,7 +66,7 @@ export class HomePage {
   }
 
   // Click handler to remove banner ad
-  async onClickBannerRemove(){
+  async onClickBannerRemove() {
     await this.removeBanner();
   }
 
@@ -133,7 +138,14 @@ export class HomePage {
       console.error('Error showing interstitial:', error);
     }
   }
+
+  // For exit app
+  initializeApp() {
+    this.platform.ready().then(() => {
+      this.platform.backButton.subscribeWithPriority(10, () => {
+        (window.navigator as any).app.exitApp(); // Close the app immediately
+      });
+    });
+  }
+
 }
-
-
-
