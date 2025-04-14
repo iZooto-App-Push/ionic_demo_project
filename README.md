@@ -136,19 +136,21 @@ export class HomePage {
     await this.showBannerAd();
   }
 
-  async showBannerAd() {
+   async ToShowBannerAd(isFixed: boolean) {
     try {
-      const options: BannerAdOptions = {
-        adId: '/21775744923/example/fixed-size-banner', // GAM Ad Unit ID
-        adSize: BannerAdSize.ADAPTIVE_BANNER,
-        position: BannerAdPosition.BOTTOM_CENTER,
-        isTesting: false,
-      };
+      await this.removeBanner();
+      await AdMob.showBanner({
+        adId: isFixed ? this.fixedBannerIdGAM : this.adaptiveBannerIdGAM,
+        adSize: isFixed ? BannerAdSize.BANNER : BannerAdSize.MEDIUM_RECTANGLE,
+        position: isFixed ? BannerAdPosition.BOTTOM_CENTER : BannerAdPosition.TOP_CENTER,
+        margin: isFixed ? 50 : 110,
+        isTesting: false, // Set true for test ads, (false for production and GAM test)
+      });
 
-      await AdMob.showBanner(options);
-      console.log('✅ GAM Banner Ad Displayed');
+      console.log(`${isFixed ? 'Fixed' : 'Adaptive'} Banner Ad Shown`);
+
     } catch (error) {
-      console.error('❌ Failed to load banner:', error);
+      console.error(`Failed to load ${isFixed ? 'fixed' : 'adaptive'} banner:`, error);
     }
   }
 }
@@ -172,30 +174,33 @@ import {
   InterstitialAdPluginEvents
 } from '@capacitor-community/admob';
 
-async prepareInterstitialAd() {
-  try {
-    AdMob.addListener(InterstitialAdPluginEvents.Loaded, () => {
-      console.log('Interstitial Loaded');
-      this.showInterstitialAd();
-    });
+  // Prepare interstitial ad (preloading before showing)
+  async prepareInterstitialAd() {
+    try {
+      // Attach interstitial ad event listeners
+      AdMob.addListener(InterstitialAdPluginEvents.Loaded, () => {
+        console.log('Interstitial Loaded');
+        this.showInterstitialAd(); // Automatically show after loading
+      });
 
-    AdMob.addListener(InterstitialAdPluginEvents.FailedToLoad, (error) => {
-      console.log('Interstitial Failed to Load:', error);
-    });
+      AdMob.addListener(InterstitialAdPluginEvents.FailedToLoad, (error) => {
+        console.log('Interstitial Failed to Load:', error);
+      });
 
-    AdMob.addListener(InterstitialAdPluginEvents.Dismissed, () => {
-      console.log('Interstitial Dismissed');
-    });
+      AdMob.addListener(InterstitialAdPluginEvents.Dismissed, () => {
+        console.log('Interstitial Dismissed');
+      });
 
-    await AdMob.prepareInterstitial({
-      adId: '/21775744923/example/interstitial',
-      isTesting: false,
-    });
+      // Load the interstitial ad
+      await AdMob.prepareInterstitial({
+        adId: this.interstitialIdGAM, // GAM interstitial ad unit
+        isTesting: false, // Set true for test ads, false for production
+      });
 
-  } catch (error) {
-    console.error('❌ Error preparing interstitial:', error);
+    } catch (error) {
+      console.error('Error preparing interstitial:', error);
+    }
   }
-}
 
 async showInterstitialAd() {
   try {
@@ -205,6 +210,59 @@ async showInterstitialAd() {
     console.error('❌ Error showing interstitial:', error);
   }
 }
+
+
+  // Prepare rewarded ad (preloading before showing)
+  async prepareRewardedAd() {
+    try {
+      // Listener: Called when the rewarded video ad has successfully loaded
+      AdMob.addListener(RewardAdPluginEvents.Loaded, () => {
+        console.log('Rewarded ad loaded');
+        this.showRewardedAd();
+      });
+
+      AdMob.addListener(RewardAdPluginEvents.Rewarded, (reward: any) => {
+        console.log('User earned reward:', reward);
+      });
+
+      AdMob.addListener(RewardAdPluginEvents.FailedToLoad, (error) => {
+        console.error('Rewarded ad failed to load:', error);
+      });
+
+      // Prepare the rewarded ad (this starts loading the ad in background)
+      await AdMob.prepareRewardVideoAd({
+        adId: this.rewardedIdGAM, // Replace with your test or production rewarded ad unit
+        isTesting: false,        // false for real ads
+      });
+
+    } catch (error) {
+      console.error('Error preparing rewarded video ad:', error);
+    }
+  }
+
+  // Show rewarded ad after it's been prepared
+  async showRewardedAd() {
+    try {
+      await AdMob.showRewardVideoAd();
+      console.log('rewarded Shown');
+    } catch (error) {
+      console.error('Error showing rewarded:', error);
+    }
+  }
+
+    // To show app open function
+  async showAppOpen() {
+    try {
+      await AdMob.prepareInterstitial({
+        adId: this.appOpenIdGAM,
+        isTesting: false // Set to false in production
+      });
+
+      await AdMob.showInterstitial();
+    } catch (error) {
+      console.error('Failed to show App Open (Interstitial):', error);
+    }
+  }
 ```
 
 ---
@@ -234,11 +292,22 @@ adb logcat | grep "Banner Ad"
 
 ---
 
-### 🧪 Sample GAM Testing IDs
+### 🧪 Sample GAM & AD MOB Testing IDs
 
-- **GAM App ID:** `ca-app-pub-3940256099942544~3347511713`
-- **Adaptive Banner:** `/21775744923/example/adaptive-banner`
-- **Fixed Size Banner:** `/21775744923/example/fixed-size-banner`
+// Use the following ad units for test ads (GAM format: /networkId/adUnitPath) and isTesting property should be false
+  private interstitialIdGAM = '/21775744923/example/interstitial';
+  private adaptiveBannerIdGAM = '/21775744923/example/adaptive-banner';
+  private fixedBannerIdGAM = '/21775744923/example/fixed-size-banner';
+  private rewardedIdGAM = '/21775744923/example/rewarded';
+  private appOpenIdGAM = '/21775744923/example/app-open';
+
+
+  // Use the following ad units for test ads (ADMOB format: /networkId/adUnitPath) and isTesting = optional (true/false)
+  private interstitialIdAdMOB = 'ca-app-pub-3940256099942544/1033173712';
+  private adaptiveBannerIdAdMOB = 'ca-app-pub-3940256099942544/9214589741';
+  private fixedBannerIdAdMOB = 'ca-app-pub-3940256099942544/6300978111';
+  private rewardedIdAdMOB = 'ca-app-pub-3940256099942544/5224354917';
+  private appOpenIdAdMOB = 'ca-app-pub-3940256099942544/9257395921';
 
 ---
 
