@@ -10,6 +10,7 @@ import {
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Platform, LoadingController } from '@ionic/angular';
 import { App } from '@capacitor/app';
+import { StatusBar, Style } from '@capacitor/status-bar';
 
 
 //Defining Angular component for Ionic
@@ -62,6 +63,19 @@ export class HomePage {
     this.presentLoading();
   }
 
+
+  async fixStatusBar() {
+    try {
+      // Make sure the webview does not extend into the status bar
+      await StatusBar.setOverlaysWebView({ overlay: false });
+      // Set the background color to something visible
+      await StatusBar.setBackgroundColor({ color: '#ADD8E6' });
+      // Set the icon style (optional: 'Light' for dark bg, 'Dark' for light bg)
+      await StatusBar.setStyle({ style: Style.Dark });
+    } catch (err) {
+      console.log('StatusBar error:', err);
+    }
+  }
 
   async presentLoading() {
     const loading = await this.loadingController.create({
@@ -231,6 +245,7 @@ export class HomePage {
   initializeApp() {
     this.platform.ready().then(() => {
       // Show App Open Ad on start
+      this.fixStatusBar();
       this.showAppOpen();
       this.platform.backButton.subscribeWithPriority(10, () => {
         (window.navigator as any).app.exitApp(); // Close the app immediately

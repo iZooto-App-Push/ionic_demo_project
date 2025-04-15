@@ -67,3 +67,16 @@
 .custom-button:hover {
   background-color: #0056b3;
 }
+
+
+.safe-header {
+  padding-top: env(safe-area-inset-top); /* Ensures spacing below status bar */
+}
+
+.bottom-title {
+  font-size: 18px;
+  font-weight: normal;
+  color: black;
+  align-self: flex-end;
+  padding-bottom: 6px;
+}
