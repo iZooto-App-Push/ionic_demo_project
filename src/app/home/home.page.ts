@@ -64,7 +64,7 @@ export class HomePage {
   }
 
 
-  async fixStatusBar() {
+  async statusBar() {
     try {
       // Make sure the webview does not extend into the status bar
       await StatusBar.setOverlaysWebView({ overlay: false });
@@ -245,7 +245,7 @@ export class HomePage {
   initializeApp() {
     this.platform.ready().then(() => {
       // Show App Open Ad on start
-      this.fixStatusBar();
+      this.statusBar();
       this.showAppOpen();
       this.platform.backButton.subscribeWithPriority(10, () => {
         (window.navigator as any).app.exitApp(); // Close the app immediately
