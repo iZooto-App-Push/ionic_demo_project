@@ -41,11 +41,6 @@ export class HomePage {
   private appOpenIdAdMOB = 'ca-app-pub-3940256099942544/9257395921';
 
 
-  //Uncomment this section for production ad units and isTesting property should be false
-  //private interstitialId = '/206696744,22505733620/SpaceLaunch/com.kickstandtech.spacelaunchschedule_interstitial';
-  //private adaptiveBannerId = '/206696744,22505733620/SpaceLaunch/com.kickstandtech.spacelaunchschedule_banner';
-  //private fixedBannerId = '/206696744,22505733620/SpaceLaunch/com.kickstandtech.spacelaunchschedule_banner';
-
   // Injecting Angular Router to enable navigation between pages/screens
   constructor(private loadingController: LoadingController, private platform: Platform, private router: Router) {
     this.initializeApp();
