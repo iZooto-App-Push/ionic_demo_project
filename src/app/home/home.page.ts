@@ -135,6 +135,22 @@ export class HomePage {
       });
 
       console.log(`${isFixed ? 'Fixed' : 'Adaptive'} Banner Ad Shown`);
+      AdMob.addListener(BannerAdPluginEvents.Loaded, () => {
+        console.log('Banner Ad Loaded');
+      });
+
+      AdMob.addListener(BannerAdPluginEvents.FailedToLoad, (error) => {
+        console.error('Banner Ad Failed to Load:', error);
+        alert(error.message);
+      });
+
+      AdMob.addListener(BannerAdPluginEvents.Opened, () => {
+        console.log('Banner Ad Opened');
+      });
+
+      AdMob.addListener(BannerAdPluginEvents.AdImpression, () => {
+        console.log('Banner Ad AdImpression');
+      });
 
     } catch (error) {
       console.error(`Failed to load ${isFixed ? 'fixed' : 'adaptive'} banner:`, error);
@@ -164,6 +180,7 @@ export class HomePage {
 
       AdMob.addListener(InterstitialAdPluginEvents.FailedToLoad, (error) => {
         console.log('Interstitial Failed to Load:', error);
+        alert(error.message);
       });
 
       AdMob.addListener(InterstitialAdPluginEvents.Dismissed, () => {
@@ -205,6 +222,7 @@ export class HomePage {
 
       AdMob.addListener(RewardAdPluginEvents.FailedToLoad, (error) => {
         console.error('Rewarded ad failed to load:', error);
+        alert(error.message);
       });
 
       // Prepare the rewarded ad (this starts loading the ad in background)
@@ -230,12 +248,27 @@ export class HomePage {
   // To show app open function
   async showAppOpen() {
     try {
+      // Attach interstitial ad event listeners
+      AdMob.addListener(InterstitialAdPluginEvents.Loaded, () => {
+        console.log('Interstitial Loaded');
+        AdMob.showInterstitial();
+      });
+
+      AdMob.addListener(InterstitialAdPluginEvents.FailedToLoad, (error) => {
+        console.log('Interstitial Failed to Load:', error);
+        alert(error.message);
+      });
+
+      AdMob.addListener(InterstitialAdPluginEvents.Dismissed, () => {
+        console.log('Interstitial Dismissed');
+      });
+
       await AdMob.prepareInterstitial({
         adId: this.appOpenIdGAM,
         isTesting: false // Set to false in production
       });
 
-      await AdMob.showInterstitial();
+
     } catch (error) {
       console.error('Failed to show App Open (Interstitial):', error);
     }
