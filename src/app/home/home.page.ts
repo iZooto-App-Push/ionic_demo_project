@@ -11,6 +11,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Platform, LoadingController } from '@ionic/angular';
 import { App } from '@capacitor/app';
 import { StatusBar, Style } from '@capacitor/status-bar';
+import { iZooto } from 'capacitor-izooto-plugin';
 
 
 //Defining Angular component for Ionic
@@ -48,7 +49,32 @@ export class HomePage {
 
   // Angular initialization lifecycle hook
   async ngOnInit() {
-    // Add any initialization logic here if needed
+    try {
+
+      iZooto.initialize().then(() => {
+        console.log('iZooto initialized successfully');
+        // Put your success logic here
+      }).catch(error => {
+        console.error('Error during iZooto initialization:', error);
+        // Handle the error here
+      });
+
+      // Get device token
+    const tokenResult = await iZooto.getToken();
+    if (tokenResult.token) {
+      console.log('Device Token:', tokenResult.token);
+    }
+
+ // Delay a bit to make sure prefs are populated
+ setTimeout(async () => {
+  const result = await iZooto.getInitialNotification();
+  if (result.payload) {
+    console.log('Cold start notification payload:', result.payload);
+  }
+}, 3000);
+    } catch (error) {
+      console.error('iZooto plugin error:', error);
+    }
   }
 
   // Ionic lifecycle hook: Called when the view fully enters and is active
@@ -56,7 +82,10 @@ export class HomePage {
     // Automatically show banners when view is active (optional)
     console.log('HomePage is defined');
     this.presentLoading();
+
   }
+
+
 
 
   async statusBar() {

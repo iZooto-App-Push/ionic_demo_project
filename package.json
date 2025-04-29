@@ -30,7 +30,9 @@
     "@capacitor/keyboard": "7.0.0",
     "@capacitor/status-bar": "^7.0.0",
     "@ionic/angular": "^8.0.0",
+    "capacitor-izooto-plugin": "file:capacitor-izooto-plugin",
     "ionicons": "^7.0.0",
+    "izooto-capacitor-plugin": "file:izooto-capacitor-plugin",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

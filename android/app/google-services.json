@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "491036363131",
+    "project_id": "momagic-demo-app",
+    "storage_bucket": "momagic-demo-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:491036363131:android:718ae032beab7b2f1255de",
+        "android_client_info": {
+          "package_name": "com.example.momagicdemoapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1r8o2BCXxcrKCw2NLz7rh5XEZnSxU7pA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:491036363131:android:7cd446b8cc9d2e8c1255de",
+        "android_client_info": {
+          "package_name": "io.ionic.starter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1r8o2BCXxcrKCw2NLz7rh5XEZnSxU7pA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

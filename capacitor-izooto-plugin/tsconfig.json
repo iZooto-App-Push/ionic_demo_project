@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+      "target": "es2017",
+      "module": "commonjs",
+      "lib": ["es2017", "dom"],
+      "declaration": true,
+      "outDir": "src",
+      "strict": true,
+      "esModuleInterop": true
+    },
+    "include": [
+      "src/**/*.ts",   // keep this if you have src/
+      "plugin.ts"      // add this if your code lives at root/plugin.ts
+    ],
+    "exclude": ["node_modules", "src"]
+  }
+  
